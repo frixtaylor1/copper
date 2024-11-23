@@ -1,127 +1,30 @@
 #include <raylib.h>
+#include <sys/types.h>
 #include <unordered_map>
 #include <bitset>
 #include <vector>
+#include <registry.hpp>
 
 namespace Cooper {
 
-  namespace Entity {
   /**
+   * ECS Pattern...
    * @description: Begin of Entity Component Systems Pattern...
    * @resouce: https://www.umlboard.com/design-patterns/entity-component-system.html
    */
+  namespace Entity {
+    namespace Components {
 
-  constexpr size_t MAX_COMPONENTS = 12;
+    typedef Vector2 Speed2;
+    typedef Vector3 Speed3;
 
-  /**
-   * Entity specification.
-   */
-  typedef uint32_t Entity;
+    struct Player {
+      Speed2    speed;
+      Rectangle rectangle;
+      Color     color;
+    };
 
-  class ComponentManager {
-    template <typename Component>
-    using ComponentStorage = std::unordered_map<Entity, Component>;
-  public:
-    template <typename Component>
-    void add(Entity entity, Component component) {
-      getComponentStorage<Component>()[entity] = component;
     }
-
-    template <typename Component>
-    ComponentStorage<Component>& getComponentStorage() {
-        static ComponentStorage<Component> storage;
-        return storage;
-    }
-
-    template <typename Component>
-    Component* get(Entity entity) {
-      ComponentStorage<Component>& storage = getComponentStorage<Component>();
-      return modifyComponentStorageByCondition<Component>(entity, storage, &foundComponent, &getComponent);
-    }
-
-    template <typename Component>
-    void remove(Entity entity) {
-      ComponentStorage<Component>& storage = getComponentStorage<Component>();
-      modifyComponentStorageByCondition<Component>(entity, storage, &foundComponent, &eraseComponent);
-    }
-
-  private:
-    template <typename Component>
-    using FindComponentCondition = bool (*)(ComponentStorage<Component>&, Entity entity);
-
-    template <typename Component>
-    using ModifyComponentStorageCallback = Component* (*)(ComponentStorage<Component>&, Entity entity);
-
-    template <typename Component>
-    Component* modifyComponentStorageByCondition(Entity                                    entity, 
-                                                 ComponentStorage<Component>&              storage, 
-                                                 FindComponentCondition<Component>         condition,
-                                                 ModifyComponentStorageCallback<Component> callback)
-    {
-      if (condition(storage, entity)) {
-        return callback(storage, entity);
-      }
-      return nullptr;
-    }
-
-  private:
-    /**
-     * Begin Static callbacks...
-     */
-    template <typename Component>
-    static bool foundComponent(ComponentStorage<Component>& componentStorage, Entity entity) {
-      return (componentStorage.find(entity) != componentStorage.end());
-    }
-
-    template <typename Component>
-    static Component* eraseComponent(ComponentStorage<Component>& componentStorage, Entity entity) {
-      componentStorage.erase(entity);
-    }
-
-    template <typename Component>
-    static Component* getComponent(ComponentStorage<Component>& componentStorage, Entity entity) {
-      return &componentStorage[entity];
-    }
-    /**
-     * End Static callbacks...
-     */
-  };
-
-  class EntityManager {
-  public:
-    Entity create() {
-      Entity entity   = nextEntity++;
-      bitsets[entity] = std::bitset<MAX_COMPONENTS>();
-      return entity;
-    }
-
-    template <typename Component>
-    void addComponent(Entity entity) {
-      bitsets[entity][getComponentTypeID<Component>()] = true;
-    }
-
-    template <typename Component>
-    bool hasComponent(Entity entity) {
-      return bitsets[entity][getComponentTypeID<Component>()];
-    }
-
-    const std::bitset<MAX_COMPONENTS>& getComponentMask(Entity entity) const {
-      return bitsets.at(entity);
-    }
-
-  private:
-    template<typename T>
-    size_t getComponentTypeID() {
-        static size_t typeID = nextTypeID++;
-        return typeID;
-    }
-
-  private:
-    static inline size_t                                    nextTypeID = 0;
-    Entity                                                  nextEntity = 0;
-    std::unordered_map<Entity, std::bitset<MAX_COMPONENTS>> bitsets;
-  };
-
   }
 
   namespace Core {
@@ -166,20 +69,8 @@ public:
   } 
 private:
   void run() {
-    Entity::EntityManager    entityManager;
-    Entity::ComponentManager componentManager;
-
-    for (int idx = 0; idx < 5000; idx++) {
-      Entity::Entity player = entityManager.create();
-
-      entityManager.addComponent<Rectangle>(player);
-      entityManager.addComponent<Color>(player);
-      entityManager.addComponent<Vector2>(player);
-
-      componentManager.add(player, Rectangle{ (float) GetRandomValue(0, GetScreenWidth() - 50), (float) GetRandomValue(0, GetScreenHeight() - 50), 50.0f, 50.0f });
-      componentManager.add(player, Color{ (unsigned const char)GetRandomValue(0, 255), (unsigned const char)GetRandomValue(0, 255), (unsigned const char)GetRandomValue(0, 255), 255 });
-      componentManager.add(player, Vector2 { (float) GetRandomValue(-3, 3), (float) GetRandomValue(-3, 3)});
-    }
+    entt::registry reg;
+    initializeEntities(reg);
 
     while (window.shouldNotClose()) {
 
@@ -187,26 +78,20 @@ private:
         /**
          * BEGIN TESTS...
          */
-        for (int idx = 0; idx < 5000; idx++) {
-          Color*     color     = componentManager.get<Color>(idx);
-          Vector2*   speed     = componentManager.get<Vector2>(idx); 
-          Rectangle* rectangle = componentManager.get<Rectangle>(idx);
+        auto view = reg.view<Entity::Components::Speed2, Rectangle, const Color>();
+        view.each([](Entity::Components::Speed2& speed, Rectangle& rectangle, const Color color) {
+          DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, color);
+          rectangle.x += speed.x;
+          rectangle.y += speed.y;
 
-          if (rectangle && color && speed) {
-            DrawRectangle(rectangle->x, rectangle->y, rectangle->width, rectangle->height, *color);
-
-            rectangle->x += speed->x;
-            rectangle->y += speed->y;
-
-            if (rectangle->y > GetScreenHeight() - rectangle->height || rectangle->y < 0) {
-              speed->y *= -1;
-            }
-
-            if (rectangle->x> GetScreenWidth() - rectangle->width || rectangle->x < 0) {
-              speed->x *= -1;
-            }
+          if (rectangle.y > GetScreenHeight() - rectangle.height || rectangle.y < 0) {
+            speed.y *= -1;
           }
-        }
+
+          if (rectangle.x> GetScreenWidth() - rectangle.width || rectangle.x < 0) {
+            speed.x *= -1;
+          }
+        });
         /**
          * END TESTS...
          */
@@ -218,6 +103,28 @@ private:
 
   void initialize() {
     SetTargetFPS(60);
+  }
+
+  void initializeEntities(entt::registry& reg) {
+    for (size_t nbEntities = 0; nbEntities < 10000; nbEntities++) {
+      const auto entity = reg.create();
+      reg.emplace<Entity::Components::Speed2>(entity,
+        (float) GetRandomValue(-3, 3),
+        (float) GetRandomValue(-3, 3)
+      );
+      reg.emplace<Rectangle>(entity,
+        (float) GetRandomValue(0, GetScreenWidth() - 50),
+        (float) GetRandomValue(0, GetScreenHeight() - 50),
+        50.0f, 
+        50.0f 
+      );
+      reg.emplace<Color>(entity,
+        (unsigned const char) GetRandomValue(0, 255),
+        (unsigned const char) GetRandomValue(0, 255),
+        (unsigned const char) GetRandomValue(0, 255),
+        (unsigned const char) 255
+      );
+    }
   }
 
 private:
