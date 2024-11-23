@@ -124,31 +124,39 @@ namespace Cooper {
 
   }
 
-class Window {
-public:
-  Window(int width = 1024,int height = 762, const char* title = "Cooper")
-    : width(width), height(height), title(title) {
-    initialize();
-  }
+  namespace Core {
 
-  ~Window() {
-    close();
-  }
+  class Window {
+  public:
+    Window(int width = 1024,int height = 762, const char* title = "Cooper")
+      : width(width), height(height), title(title) {
+      initialize();
+    }
 
-private:
-  void initialize() {
-    InitWindow(width, height, title);
-  }
+    ~Window() {
+      close();
+    }
 
-  void close() {
-    CloseWindow();
-  }
+    static bool shouldNotClose() {
+      return !WindowShouldClose();
+    }
 
-private:
-  int         width,
-              height;
-  const char* title;
-};
+  private:
+    void initialize() {
+      InitWindow(width, height, title);
+    }
+
+    void close() {
+      CloseWindow();
+    }
+
+  private:
+    int         width,
+                height;
+    const char* title;
+  };
+  
+  }
 
 class Game {
 public:
@@ -160,7 +168,6 @@ private:
   void run() {
     Entity::EntityManager    entityManager;
     Entity::ComponentManager componentManager;
-
 
     for (int idx = 0; idx < 5000; idx++) {
       Entity::Entity player = entityManager.create();
@@ -174,7 +181,7 @@ private:
       componentManager.add(player, Vector2 { (float) GetRandomValue(-3, 3), (float) GetRandomValue(-3, 3)});
     }
 
-    while (!WindowShouldClose()) {
+    while (window.shouldNotClose()) {
 
       BeginDrawing();
         /**
@@ -214,7 +221,7 @@ private:
   }
 
 private:
-  Window window {};
+  Core::Window window {};
 };
 
 }
