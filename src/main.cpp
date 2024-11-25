@@ -21,11 +21,18 @@ struct Movable {
 
 namespace Systems {
 
-struct MovementSystem {
+struct ISystem {
+  virtual ~ISystem() {} 
+  virtual void update(entt::registry& reg) = 0;
+};
+
+class MovementSystem : public ISystem {
+public:
   void update(entt::registry& reg) {
     updatePlayer(reg);
   }
 
+private:
   typedef bool (*MovableCondition)(int key);
   typedef void (*MovableAction)(Entity::Components::Movable& movable, const Entity::Components::Speed2);
   static void playerActsByCondition(int                       key,
@@ -33,17 +40,19 @@ struct MovementSystem {
                              const Entity::Components::Speed2 speed,
                              MovableCondition                 condition,
                              MovableAction                    callback) {
-    if (IsKeyDown(key)) callback(movable, speed);
+    if (condition(key)) callback(movable, speed);
   }
 
   void updatePlayer(entt::registry& reg) {
     auto playerView = reg.view<Entity::Components::Speed2, Entity::Components::Movable>();
-    playerView.each([](const Entity::Components::Speed2& speed, Entity::Components::Movable& movable) {
-      playerActsByCondition(KEY_W, movable, speed, &IsKeyDown, &movePlayerUp);
-      playerActsByCondition(KEY_S, movable, speed, &IsKeyDown, &movePlayerDown);
-      playerActsByCondition(KEY_A, movable, speed, &IsKeyDown, &movePlayerLeft);
-      playerActsByCondition(KEY_D, movable, speed, &IsKeyDown, &movePlayerRight);
-    });
+    playerView.each(&updatePlayerPosition);
+  }
+
+  static void updatePlayerPosition(const Entity::Components::Speed2& speed, Entity::Components::Movable& movable) {
+    playerActsByCondition(KEY_W, movable, speed, &IsKeyDown, &movePlayerUp);
+    playerActsByCondition(KEY_S, movable, speed, &IsKeyDown, &movePlayerDown);
+    playerActsByCondition(KEY_A, movable, speed, &IsKeyDown, &movePlayerLeft);
+    playerActsByCondition(KEY_D, movable, speed, &IsKeyDown, &movePlayerRight);
   }
 
   static void movePlayerUp(Entity::Components::Movable& movable, const Entity::Components::Speed2 speed) {
@@ -63,10 +72,23 @@ struct MovementSystem {
   }
 };
 
-class RenderSystem {
+class RenderSystem : public ISystem {
 public:
+  void update(entt::registry& reg) {
+    auto playerView = reg.view<Entity::Components::Movable, Color>();
+    playerView.each(&renderPlayer);
+  }
 
 private:
+  static void renderPlayer(const Entity::Components::Movable& movable, const Color& color) {
+    DrawRectangle(movable.pos.x, movable.pos.y, 50, 50, color);
+  }
+};
+
+class PhysicsSystem : public ISystem {
+public:
+  void update(entt::registry& reg) {
+  }
 };
 
 } // namespace Systems
@@ -119,16 +141,18 @@ private:
     entt::registry reg;
     initializeEntities(reg);
     Entity::Systems::MovementSystem movementSystem;
+    Entity::Systems::RenderSystem   renderSystem;
+    Entity::Systems::PhysicsSystem  physicsSystem;
 
-    while (window.shouldNotClose()) {
-      BeginDrawing();
+    while (Core::Window::shouldNotClose()) {
       movementSystem.update(reg);
+      physicsSystem.update(reg);
 
-      auto drawView = reg.view<Entity::Components::Movable, Color>();
-      drawView.each([](const Entity::Components::Movable movable, const Color color) {
-        DrawRectangle(movable.pos.x, movable.pos.y, 50, 50, color);
-      });
+      BeginDrawing();
       ClearBackground(GetColor(0x181818FF));
+
+      renderSystem.update(reg);
+
       DrawFPS(0, 0);
       EndDrawing();
     }
