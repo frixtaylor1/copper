@@ -75,8 +75,14 @@ private:
 class RenderSystem : public ISystem {
 public:
   void update(entt::registry& reg) {
-    auto playerView = reg.view<Entity::Components::Movable, Color>();
-    playerView.each(&renderPlayer);
+    BeginDrawing();
+      ClearBackground(GetColor(0x181818FF));
+
+      auto playerView = reg.view<Entity::Components::Movable, Color>();
+      playerView.each(&renderPlayer);
+
+      DrawFPS(0, 0);
+    EndDrawing();
   }
 
 private:
@@ -140,21 +146,21 @@ private:
   void run() {
     entt::registry reg;
     initializeEntities(reg);
+
     Entity::Systems::MovementSystem movementSystem;
     Entity::Systems::RenderSystem   renderSystem;
     Entity::Systems::PhysicsSystem  physicsSystem;
 
+    Entity::Systems::ISystem* systems[] = {
+      &movementSystem,
+      &renderSystem,
+      &physicsSystem
+    };
+
     while (Core::Window::shouldNotClose()) {
-      movementSystem.update(reg);
-      physicsSystem.update(reg);
-
-      BeginDrawing();
-      ClearBackground(GetColor(0x181818FF));
-
-      renderSystem.update(reg);
-
-      DrawFPS(0, 0);
-      EndDrawing();
+      for (Entity::Systems::ISystem* system : systems) {
+        system->update(reg);
+      }
     }
   }
 
