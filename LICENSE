@@ -672,3 +672,11 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
+
+
+  Third-Party Licenses
+
+  This project uses the following third-party dependencies:
+
+    entt: Licensed under the MIT License. The full license text can be found in the corresponding dependency folder.
+    raylib: Licensed under the zlib/libpng License. The full license text can be found in the corresponding dependency folder.
