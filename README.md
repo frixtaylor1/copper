@@ -24,14 +24,12 @@ _A game made in C++._
 
 3. Build the project using your preferred build system (e.g., CMake):
    ```bash
-   mkdir build && cd build
-   cmake ..
-   make
+   make build && make;
    ```
 
 4. Run the game:
    ```bash
-   ./copper
+   make run
    ```
 
 ---
@@ -40,25 +38,6 @@ _A game made in C++._
 
 - **[Raylib](https://github.com/raysan5/raylib):** A simple and easy-to-use library for rendering graphics, audio, and more.
 - **[EnTT](https://github.com/skypjack/entt):** A fast, header-only ECS library.
-
----
-
-## 💡 **Contributing**
-
-1. Fork the repository.
-2. Create a new branch for your feature or bugfix:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add feature-name"
-   ```
-4. Push the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request!
 
 ---
 
