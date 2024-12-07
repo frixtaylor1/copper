@@ -1,3 +1,7 @@
+/**
+ * This file is part of Copper and is licensed under the GPLv3.
+ * See the LICENSE file for more details.
+ */
 #include "./terminal.hpp"
 #include "raylib.h"
 
@@ -36,7 +40,7 @@ void Terminal::handleInput() {
 void Terminal::render(int x, int y, int width) {
   DrawRectangle(x, y, width, historyHeight, DARKGRAY);
   int lineY = y + 5;
-  for (int i = 0; i <  commandHistory.size(); i++) {
+  for (size_t i = 0; i <  commandHistory.size(); i++) {
     DrawText(commandHistory[i].c_str(), x + 5, lineY, 20, LIGHTGRAY);
     lineY += 25;
     if (lineY > y + historyHeight - inputBoxHeight) break;

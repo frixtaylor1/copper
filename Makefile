@@ -10,31 +10,45 @@ compile_graphics_flags  = -lGL -lm -lpthread -ldl -lrt -lX11
 graphics_command        = $(graphics_lib_dir)/libraylib.a -I$(graphics_include_dir) -L$(graphics_lib_dir) $(compile_graphics_flags)
 entt_command            = -I$(entt_dir)
 
-##
-## Compiling the Terminal static library...
-##
-terminal_build_command          = $(cxx_compiler) -c -o $(build_dir)/terminal.o $(terminal_module_dir)/terminal.cpp -I$(graphics_include_dir)
-terminal_build_library_command  = ar rcs $(build_dir)/terminal.a $(build_dir)/terminal.o
-terminal_module_compile_command = $(build_dir)/terminal.a -I$(terminal_module_dir)
-
 project_name            = game
 cxx_compiler            = g++
 cxx_version             = -std=c++17
 cxx_flags               = $(cxx_version) -Wall -Werror -pedantic
 
+# Generar una lista de objetos basados en los archivos fuente
+sources                 = $(wildcard $(src_dir)/*.cpp)
+objects                 = $(patsubst $(src_dir)/%.cpp, $(build_dir)/%.o, $(sources))
+terminal_object         = $(build_dir)/terminal.o
+terminal_library        = $(build_dir)/terminal.a
 main_build_target       = $(build_dir)/$(project_name)
 
-$(main_build_target): | $(build_dir)
-	$(terminal_build_command)
-	$(terminal_build_library_command)
-	$(cxx_compiler) $(cxx_flags) -o $(build_dir)/$(project_name) $(src_dir)/main.cpp $(terminal_module_compile_command) $(graphics_command) $(entt_command)
+# Regla principal
+all: $(main_build_target)
 
+# Regla para el ejecutable principal
+$(main_build_target): $(objects) $(terminal_library) | $(build_dir)
+	$(cxx_compiler) $(cxx_flags) -o $@ $^ $(graphics_command) $(entt_command) -I$(terminal_module_dir)
+
+# Regla para compilar cada archivo fuente
+$(build_dir)/%.o: $(src_dir)/%.cpp | $(build_dir)
+	$(cxx_compiler) $(cxx_flags) -c -o $@ $< -I$(graphics_include_dir) $(entt_command) -I$(terminal_module_dir) 
+
+# Compilar el módulo terminal
+$(terminal_object): $(terminal_module_dir)/terminal.cpp | $(build_dir)
+	$(cxx_compiler) $(cxx_flags) -c -o $@ $< -I$(graphics_include_dir)
+
+$(terminal_library): $(terminal_object)
+	ar rcs $@ $<
+
+# Crear el directorio build
 $(build_dir):
-	mkdir -p $(build_dir)
+	mkdir -p $@
 
+# Limpiar la compilación
 clean:
 	rm -rf $(build_dir)
 
+# Ejecutar el programa
 run: $(main_build_target)
 	./$(main_build_target)
 
