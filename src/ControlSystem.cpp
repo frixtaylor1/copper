@@ -22,30 +22,39 @@ void ControlSystem::updatePlayerPosition(Components::Controllable& movable) {
   playerActsByCondition(KEY_D, movable, &IsKeyDown, moveRightCommand, {1,  0});
 }
 
-void ControlSystem::playerActsByCondition(int                               key,
-                                  Components::Controllable& movable,
-                                  ControllableCondition             condition,
-                                  Commands::ICommand&               command,
-                                  Vector2                           direction) {
-  if (!condition(key)) return;
+// @TODO: This could be in the CollisionSystem..
+void ControlSystem::playerActsByCondition(int key,
+                                           Components::Controllable& movable,
+                                           ControllableCondition condition,
+                                           Commands::ICommand& command,
+                                           Vector2 direction) {
+    if (!condition(key)) return;
 
-  LevelData level = GameContext::GetLevel();
-  Vector2 nextPos = movable.pos;
+    LevelData level = GameContext::GetLevel();
+    Vector2 nextPos = movable.pos;
 
-  // Actualiza la posición tentativa
-  nextPos.y += direction.y * 15;
-  nextPos.x += direction.x * 15;
+    nextPos.y += direction.y * 1;
+    nextPos.x += direction.x * 1;
 
-  size_t cellX = (size_t) (nextPos.x + 15) / 30;
-  size_t cellY = (size_t) (nextPos.y + 15) / 30;
+    Rectangle playerRect = { nextPos.x, nextPos.y, 30, 30 };
 
-  // Verifica límites y colisiones
-  if (cellX < level.columns && cellY < level.rows) {
-    size_t index =  (cellY * level.columns) + cellX;
-    if (level.ptr[index] == 0) {
-      command.execute(movable);
+    bool collision = false;
+    for (size_t row = 0; row < level.rows; ++row) {
+        for (size_t col = 0; col < level.columns; ++col) {
+            if (level.ptr[row * level.columns + col] == 1) { // If there's a wall
+                Rectangle wallRect = Rectangle { (float) col * 30, (float) row * 30, 30, 30 };
+                if (CheckCollisionRecs(playerRect, wallRect)) {
+                    collision = true;
+                    break;
+                }
+            }
+        }
+        if (collision) break;
     }
-  }
+
+    if (!collision) {
+        command.execute(movable);
+    }
 }
 
 }
