@@ -37,6 +37,6 @@
 //  - Create an EntityManager that encapsulates this dependency (entt) to improve system control.
 
 int main(void) {
-  Copper::Game game;
+  Copper::Game run;
   return 0;
 }

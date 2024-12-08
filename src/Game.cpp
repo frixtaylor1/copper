@@ -3,7 +3,8 @@
  * See the LICENSE file for more details.
  */
 #include "./Game.hpp"
-#include "./GameContext.hpp"
+#include "AssetsContext.hpp"
+#include "GameContext.hpp"
 
 namespace Copper {
 
@@ -17,9 +18,7 @@ Game::~Game() {
 }
 
 void Game::run() {
-  while (Core::Window::shouldNotClose()) {
-    update();
-  }
+  while (Core::Window::shouldNotClose()) update();
 }
 
 void Game::update() {
@@ -49,6 +48,7 @@ void Game::updateLevelManager() {
 
 void Game::initialize() {
   SetTargetFPS(120);
+  AssetsContext::MapReources::Load();
   initializeEntities(GameContext::context);
   initializeTerminal();
 }
@@ -68,6 +68,7 @@ void Game::initializeEntities(entt::registry& reg) {
 
 void Game::cleanUp() {
   DestroyTerminal(terminal);
+  AssetsContext::MapReources::Cleanup();
 }
 
 } // namespace Copper

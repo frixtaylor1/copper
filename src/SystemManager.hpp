@@ -5,11 +5,11 @@
 #ifndef SYSTEMMANAGER_HPP
 #define SYSTEMMANAGER_HPP
 
-#include "./ControlSystem.hpp"
-#include "./RenderSystem.hpp"
-#include "./CollisionSystem.hpp"
-#include "./SoundSystem.hpp"
-#include "./PhysicsSystem.hpp"
+#include "ControlSystem.hpp"
+#include "RenderSystem.hpp"
+#include "CollisionSystem.hpp"
+#include "SoundSystem.hpp"
+#include "PhysicsSystem.hpp"
 
 namespace Managers {
 

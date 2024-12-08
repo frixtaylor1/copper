@@ -3,6 +3,8 @@
  * See the LICENSE file for more details.
  */
 #include "./ControlSystem.hpp"
+#include "Components.hpp"
+#include "CollisionSystem.hpp"
 
 namespace Systems {
 
@@ -23,34 +25,14 @@ void ControlSystem::updatePlayerPosition(Components::Controllable& movable) {
 }
 
 // @TODO: This could be in the CollisionSystem..
-void ControlSystem::playerActsByCondition(int key,
-                                           Components::Controllable& movable,
-                                           ControllableCondition condition,
-                                           Commands::ICommand& command,
-                                           Vector2 direction) {
+void ControlSystem::playerActsByCondition(int                       key,
+                                          Components::Controllable& movable,
+                                          ControllableCondition     condition,
+                                          Commands::ICommand&       command,
+                                          Vector2                   direction) {
     if (!condition(key)) return;
 
-    LevelData level = GameContext::GetLevel();
-    Vector2 nextPos = movable.pos;
-
-    nextPos.y += direction.y * 1;
-    nextPos.x += direction.x * 1;
-
-    Rectangle playerRect = { nextPos.x, nextPos.y, 30, 30 };
-
-    bool collision = false;
-    for (size_t row = 0; row < level.rows; ++row) {
-        for (size_t col = 0; col < level.columns; ++col) {
-            if (level.ptr[row * level.columns + col] == 1) { // If there's a wall
-                Rectangle wallRect = Rectangle { (float) col * 30, (float) row * 30, 30, 30 };
-                if (CheckCollisionRecs(playerRect, wallRect)) {
-                    collision = true;
-                    break;
-                }
-            }
-        }
-        if (collision) break;
-    }
+    bool collision = Services::CollisionService::PlayerCollides(movable, direction);
 
     if (!collision) {
         command.execute(movable);

@@ -6,6 +6,10 @@ Kevin Daniel Taylor aka frixtaylor1
 ---
 ## Contributors
 
+## Art [Images]
+hyptosis
+ - page: https://hyptosis.newgrounds.com/
+
 ## Music
 Gabriel Nicolas Gonzales Ferreira aka Gngf
  - github: gabrielinuz

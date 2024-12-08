@@ -8,10 +8,10 @@
 #include <raylib.h>
 #include <entt.hpp>
 
-#include "./ISystem.hpp"
-#include "./Components.hpp"
-#include "./GameContext.hpp"
-#include "./MovementCommands.hpp"
+#include "ISystem.hpp"
+#include "Components.hpp"
+#include "GameContext.hpp"
+#include "MovementCommands.hpp"
 
 namespace Systems {
 

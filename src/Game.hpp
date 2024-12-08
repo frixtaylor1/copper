@@ -5,9 +5,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "./SystemManager.hpp"
-#include "./LevelManager.hpp"
-#include "./Window.hpp"
+#include "SystemManager.hpp"
+#include "LevelManager.hpp"
+#include "Window.hpp"
 
 #include <raylib.h>
 #include <entt.hpp>

@@ -14,22 +14,19 @@ namespace Systems {
 
 class RenderSystem : public ISystem {
 public:
-  void update(entt::registry& reg) {
-    BeginDrawing();
-      ClearBackground(GetColor(0x181818FF));
-
-      entt::basic_view playerView = reg.view<Components::Controllable, Color>();
-      playerView.each(&renderPlayer);
-
-      DrawFPS(0, 0);
-    EndDrawing();
-  }
+  void update(entt::registry& reg);
 
 private:
-  static void renderPlayer(const Components::Controllable& movable, const Color& color) {
-    DrawRectangle(movable.pos.x, movable.pos.y, 30, 30, color);
-  }
+  static void RenderPlayer(const Components::Controllable& movable, const Color& color);
 };
+
+  namespace Services {
+
+  struct RenderService {
+    static void DrawPlayer(const Components::Controllable& movable, const Color& color);
+  };
+
+  } // namespace Services
 
 } // namespace Systems
 

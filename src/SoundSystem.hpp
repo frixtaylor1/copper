@@ -5,7 +5,7 @@
 #ifndef SOUNDSYSTEM_HPP
 #define SOUNDSYSTEM_HPP
 
-#include "./ISystem.hpp"
+#include "ISystem.hpp"
 
 namespace Systems {
 

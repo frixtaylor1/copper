@@ -5,7 +5,7 @@
 #ifndef PHYSICSSYSTEM_HPP
 #define PHYSICSSYSTEM_HPP
 
-#include "./ISystem.hpp"
+#include "ISystem.hpp"
 
 namespace Systems {
   

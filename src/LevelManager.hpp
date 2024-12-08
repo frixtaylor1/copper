@@ -5,7 +5,8 @@
 #ifndef LEVELMANAGER_HPP
 #define LEVELMANAGER_HPP
 
-#include "./GameContext.hpp"
+#include "AssetsContext.hpp"
+#include "GameContext.hpp"
 #include <raylib.h>
 
 namespace Managers {
@@ -23,7 +24,11 @@ public:
 
     for (size_t cell = 0; cell < level.rows * level.columns; cell++) {
       if (level.ptr[cell] == 1) {
-        DrawRectangle(column * 30, row * 30, 30, 30, RAYWHITE);
+        DrawTextureRec(
+          AssetsContext::MapReources::mapTexture,
+          AssetsContext::MapReources::GetMountainWallRectangle(),
+          { (float) column * 30, (float) row * 30 }, WHITE );
+        // DrawRectangle(column * 30, row * 30, 30, 30, RAYWHITE);
       }
       if (++column == level.columns) {
         column = 0;
