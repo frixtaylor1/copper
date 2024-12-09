@@ -54,6 +54,14 @@ void Terminal::setCallback(const String& command, Callback callback) {
   callbacks[command] = callback;
 }
 
+void Terminal::toggle() {
+  is_active = !is_active;
+}
+
+bool Terminal::isActive() {
+  return is_active;
+}
+
 Terminal* CreateTerminal() {
   return new Terminal();
 }
@@ -72,4 +80,12 @@ void TerminalHandleInput(Terminal* terminal) {
 
 void TerminalRender(Terminal* terminal) {
   terminal->render(0, GetScreenHeight() - 240, GetScreenWidth());
+}
+
+void TerminalTogle(Terminal* terminal) {
+  terminal->toggle();
+}
+
+bool TerminalIsActive(Terminal* terminal) {
+  return terminal->isActive();
 }

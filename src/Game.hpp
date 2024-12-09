@@ -40,7 +40,6 @@ private:
 
 private:
   Terminal*               terminal;
-  bool                    open_terminal = false;
   Core::Window            window;
   Managers::SystemManager systemManager;
   Managers::LevelManager  levelManager;

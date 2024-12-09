@@ -15,7 +15,7 @@ struct AssetsContext {
     }
 
     static inline const Rectangle GetMountainWallRectangle() {
-      return { 32.0f * 3, 32.0f * 23, 32, 32 };
+      return { 32.0f * 3, 32.0f * 19, 32, 32 };
     }
   };
 };

@@ -29,6 +29,8 @@ public:
   void handleInput();
   void render(int x, int y, int width);
   void setCallback(const String& command, Callback callback);
+  void toggle();
+  bool isActive();
 
 private:
   UnorderedMap<String, Callback> callbacks;
@@ -37,6 +39,7 @@ private:
   size_t                         historyLimit   = 10;
   int                            inputBoxHeight = 30;
   int                            historyHeight  = 200;
+  bool                           is_active      = false;
 };
 
 extern "C" {
@@ -45,5 +48,7 @@ extern "C" {
     void      TerminalSetCallback(Terminal* terminal, const char* command, void (*callback)(void));
     void      TerminalHandleInput(Terminal* terminal);
     void      TerminalRender(Terminal* terminal);
+    bool      TerminalIsActive(Terminal* terminal);
+    void      TerminalTogle(Terminal* terminal);
 }
 #endif // TERMINAL_HPP

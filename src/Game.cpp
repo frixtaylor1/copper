@@ -5,6 +5,7 @@
 #include "./Game.hpp"
 #include "AssetsContext.hpp"
 #include "GameContext.hpp"
+#include "terminal.hpp"
 
 namespace Copper {
 
@@ -28,13 +29,13 @@ void Game::update() {
 }
 
 void Game::updateTerminal() {
-  if (open_terminal) {
+  if (TerminalIsActive(terminal)) {
     TerminalRender(terminal);
     TerminalHandleInput(terminal);
   }
 
   if (IsKeyPressed(KEY_RIGHT_CONTROL)) {
-    open_terminal = !open_terminal;
+    TerminalTogle(terminal);
   }
 }
 
@@ -48,7 +49,7 @@ void Game::updateLevelManager() {
 
 void Game::initialize() {
   SetTargetFPS(120);
-  AssetsContext::MapReources::Load();
+  GameContext::Load();
   initializeEntities(GameContext::context);
   initializeTerminal();
 }

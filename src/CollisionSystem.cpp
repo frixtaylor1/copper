@@ -19,7 +19,10 @@ namespace Systems {
       nextPos.y += direction.y;
       nextPos.x += direction.x;
 
-      Rectangle playerRect = { nextPos.x, nextPos.y, 30, 30 };
+      Rectangle playerRect = { nextPos.x, nextPos.y,
+          GameContext::Player::GetSize().x,
+          GameContext::Player::GetSize().y
+      };
 
       bool collision = false;
       for (size_t row = 0; row < level.rows; ++row) {

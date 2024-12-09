@@ -7,6 +7,8 @@
 
 #include <raylib.h>
 
+#include "AssetsContext.hpp"
+#include "GameContext.hpp"
 #include "ISystem.hpp"
 #include "Components.hpp"
 
@@ -15,15 +17,14 @@ namespace Systems {
 class RenderSystem : public ISystem {
 public:
   void update(entt::registry& reg);
-
-private:
-  static void RenderPlayer(const Components::Controllable& movable, const Color& color);
 };
 
   namespace Services {
 
   struct RenderService {
-    static void DrawPlayer(const Components::Controllable& movable, const Color& color);
+    static void DrawPlayer(const Components::Controllable& player);
+    static void DrawLevel();
+    static void DrawCamera(const Components::Controllable& player);
   };
 
   } // namespace Services
