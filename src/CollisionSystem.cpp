@@ -13,13 +13,15 @@ namespace Systems {
   namespace Services {
 
   bool CollisionService::PlayerCollides(const Components::Controllable& player, const Vector2& direction) {
-      LevelData level = GameContext::GetLevel();
-      Vector2 nextPos = player.pos;
+      LevelData level   = GameContext::GetLevel();
+      Vector2   nextPos = player.pos;
 
       nextPos.y += direction.y;
       nextPos.x += direction.x;
 
-      Rectangle playerRect = { nextPos.x, nextPos.y,
+      Rectangle playerRect = {
+          nextPos.x,
+          nextPos.y,
           GameContext::Player::GetSize().x,
           GameContext::Player::GetSize().y
       };
@@ -37,7 +39,6 @@ namespace Systems {
           }
           if (collision) break;
       }
-
       return collision;
   }
 

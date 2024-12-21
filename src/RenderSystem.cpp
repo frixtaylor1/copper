@@ -3,6 +3,7 @@
  * See the LICENSE file for more details.
  */
 #include "./RenderSystem.hpp"
+#include "AssetsContext.hpp"
 #include "Components.hpp"
 #include "GameContext.hpp"
 #include "raylib.h"
@@ -48,12 +49,58 @@ void RenderSystem::update(entt::registry& reg) {
     size_t row      = 0;
     size_t column   = 0;
 
+
     for (size_t cell = 0; cell < level.rows * level.columns; cell++) {
-      if (level.ptr[cell] == 1) {
-        DrawTextureRec(
-          AssetsContext::MapReources::mapTexture,
-          AssetsContext::MapReources::GetMountainWallRectangle(),
-          { (float) column * 30, (float) row * 30 }, WHITE );
+      Vector2 pos = { (float) column * 30, (float) row * 30 };
+      switch (level.ptr[cell]) {
+        case 1:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetMountainWallRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 2:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetDoorRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 10:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetGreenGrassGroundRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 11:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetYellowGrassGroundLeftRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 12:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetYellowGrassGroundRightRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 13:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetYellowGrassGroundRectangle(),
+            pos,
+            WHITE
+          );
+          break;
       }
       if (++column == level.columns) {
         column = 0;

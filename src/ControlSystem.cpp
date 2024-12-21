@@ -24,7 +24,6 @@ void ControlSystem::updatePlayerPosition(Components::Controllable& movable) {
   playerActsByCondition(KEY_D, movable, &IsKeyDown, moveRightCommand, {1,  0});
 }
 
-// @TODO: This could be in the CollisionSystem..
 void ControlSystem::playerActsByCondition(int                       key,
                                           Components::Controllable& movable,
                                           ControllableCondition     condition,
@@ -32,9 +31,7 @@ void ControlSystem::playerActsByCondition(int                       key,
                                           Vector2                   direction) {
     if (!condition(key)) return;
 
-    bool collision = Services::CollisionService::PlayerCollides(movable, direction);
-
-    if (!collision) {
+    if (!Services::CollisionService::PlayerCollides(movable, direction)) {
         command.execute(movable);
     }
 }

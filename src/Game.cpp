@@ -6,6 +6,7 @@
 #include "AssetsContext.hpp"
 #include "GameContext.hpp"
 #include "terminal.hpp"
+#include "raymath.h"
 
 namespace Copper {
 
@@ -62,10 +63,13 @@ void Game::initializeTerminal() {
 
 void Game::initializeEntities(entt::registry& reg) {
   entt::entity player = reg.create();
-  reg.emplace<Components::Controllable>(player, Vector2 { 2.f * 15.f, 2.f * 15.f }, Components::Speed2 { 3.f, 3.f });
+  reg.emplace<Components::Controllable>(
+    player,
+    Vector2Multiply(GameContext::Player::GetSize(), { 2.f, 2.f }),
+    GameContext::Player::GetSpeed()
+  );
   reg.emplace<Color>(player, RED);
 }
-
 
 void Game::cleanUp() {
   DestroyTerminal(terminal);
