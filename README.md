@@ -14,7 +14,7 @@ _A game made in C++._
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/tu-usuario/copper.git
+   git clone https://github.com/frixtaylor1/copper.git
    cd copper
    ```
 
