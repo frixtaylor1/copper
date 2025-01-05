@@ -12,8 +12,6 @@
 #include <raylib.h>
 #include <entt.hpp>
 
-#include <terminal.hpp>
-
 #include <assert.h>
 
 namespace Copper {
@@ -30,16 +28,13 @@ public:
 private:
   void run();
   void update();
-  void updateTerminal();
   void updateSystems();
   void updateLevelManager();
   void initialize();
-  void initializeTerminal();
   void initializeEntities(entt::registry& reg);
   void cleanUp();
 
 private:
-  Terminal*               terminal;
   Core::Window            window;
   Managers::SystemManager systemManager;
   Managers::LevelManager  levelManager;

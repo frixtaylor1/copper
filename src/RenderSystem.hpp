@@ -7,16 +7,18 @@
 
 #include <raylib.h>
 
-#include "AssetsContext.hpp"
 #include "GameContext.hpp"
 #include "ISystem.hpp"
 #include "Components.hpp"
+#include "TerminalSystem.hpp"
 
 namespace Systems {
 
 class RenderSystem : public ISystem {
 public:
   void update(entt::registry& reg);
+private:
+  TerminalSystem terminalSystem;
 };
 
   namespace Services {

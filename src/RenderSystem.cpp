@@ -6,7 +6,9 @@
 #include "AssetsContext.hpp"
 #include "Components.hpp"
 #include "GameContext.hpp"
-#include "raylib.h"
+
+#include <raylib.h>
+#include <terminal.hpp>
 
 namespace Systems {
 
@@ -29,6 +31,12 @@ void RenderSystem::update(entt::registry& reg) {
       playerView.each(&Services::RenderService::DrawCamera);
 
       EndMode2D();
+
+      /**
+       * Rendering Terminal...
+       */
+      terminalSystem.update(reg);
+
     DrawFPS(0, 0);
   EndDrawing();
 }
@@ -97,6 +105,22 @@ void RenderSystem::update(entt::registry& reg) {
           DrawTextureRec(
             AssetsContext::MapReources::mapTexture,
             AssetsContext::MapReources::GetYellowGrassGroundRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 14:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetYellowGrassGroundUpRectangle(),
+            pos,
+            WHITE
+          );
+          break;
+        case 15:
+          DrawTextureRec(
+            AssetsContext::MapReources::mapTexture,
+            AssetsContext::MapReources::GetYellowGrassGroundDownRectangle(),
             pos,
             WHITE
           );

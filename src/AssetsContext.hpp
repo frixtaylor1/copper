@@ -3,6 +3,9 @@
 
 #include "raylib.h"
 
+const int ROTATION_LEFT = 1;
+const int ROTATION_RIGHT = 2;
+
 struct AssetsContext {
   struct MapReources {
     static inline Texture2D mapTexture;
@@ -32,6 +35,14 @@ struct AssetsContext {
 
     static inline const Rectangle GetGreenGrassGroundRectangle() {
       return { 32.0f * 21, 32.0f * 4, 32, 32 };
+    }
+
+    static inline const Rectangle GetYellowGrassGroundUpRectangle() {
+      return { 32.0f * 21, 32.0f * 3, 32, 32 };
+    }
+
+    static inline const Rectangle GetYellowGrassGroundDownRectangle() {
+      return { 32.0f * 21, 32.0f * 5, 32, 32 };
     }
 
     static inline const Rectangle GetYellowGrassGroundRectangle() {

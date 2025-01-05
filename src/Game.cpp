@@ -5,8 +5,11 @@
 #include "./Game.hpp"
 #include "AssetsContext.hpp"
 #include "GameContext.hpp"
-#include "terminal.hpp"
 #include "raymath.h"
+
+#ifndef FPS
+  #define FPS 120
+#endif
 
 namespace Copper {
 
@@ -24,20 +27,8 @@ void Game::run() {
 }
 
 void Game::update() {
-  updateTerminal();
   updateSystems();
   updateLevelManager();
-}
-
-void Game::updateTerminal() {
-  if (TerminalIsActive(terminal)) {
-    TerminalRender(terminal);
-    TerminalHandleInput(terminal);
-  }
-
-  if (IsKeyPressed(KEY_RIGHT_CONTROL)) {
-    TerminalTogle(terminal);
-  }
 }
 
 void Game::updateSystems() {
@@ -49,16 +40,9 @@ void Game::updateLevelManager() {
 }
 
 void Game::initialize() {
-  SetTargetFPS(120);
+  SetTargetFPS(FPS);
   GameContext::Load();
   initializeEntities(GameContext::context);
-  initializeTerminal();
-}
-
-void Game::initializeTerminal() {
-  terminal = CreateTerminal();
-  TerminalSetCallback(terminal, "nextLevel",     &GameContext::NextLevel);
-  TerminalSetCallback(terminal, "previousLevel", &GameContext::PreviousLevel);
 }
 
 void Game::initializeEntities(entt::registry& reg) {
@@ -72,7 +56,6 @@ void Game::initializeEntities(entt::registry& reg) {
 }
 
 void Game::cleanUp() {
-  DestroyTerminal(terminal);
   AssetsContext::MapReources::Cleanup();
 }
 
