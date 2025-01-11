@@ -23,7 +23,7 @@ Game::~Game() {
 }
 
 void Game::run() {
-  while (Core::Window::shouldNotClose()) update();
+  while (Core::Window::ShouldNotClose()) update();
 }
 
 void Game::update() {
@@ -32,7 +32,7 @@ void Game::update() {
 }
 
 void Game::updateSystems() {
-  systemManager.updateSystems(GameContext::context);
+  systemManager.updateSystems(GameContext::GetContext());
 }
 
 void Game::updateLevelManager() {
@@ -42,7 +42,7 @@ void Game::updateLevelManager() {
 void Game::initialize() {
   SetTargetFPS(FPS);
   GameContext::Load();
-  initializeEntities(GameContext::context);
+  initializeEntities(GameContext::GetContext());
 }
 
 void Game::initializeEntities(entt::registry& reg) {

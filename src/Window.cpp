@@ -15,7 +15,7 @@ Window::~Window() {
   close();
 }
 
-bool Window::shouldNotClose() {
+bool Window::ShouldNotClose() {
   return !WindowShouldClose();
 }
 

@@ -14,7 +14,7 @@ public:
   Window(int width = 1024, int height = 762, const char* title = "Cooper");
   ~Window();
 
-  static bool shouldNotClose();
+  static bool ShouldNotClose();
 
 private:
   void initialize();

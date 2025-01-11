@@ -14,8 +14,8 @@ namespace Systems {
 
 void RenderSystem::update(entt::registry& reg) {
   BeginDrawing();
-    ClearBackground(GetColor(0x181818FF));
-      BeginMode2D(GameContext::Player::camera2d);
+    ClearBackground(GameContext::GetBackgroundColor());
+      BeginMode2D(GameContext::Player::GetCamera());
 
       /**
        * Rendering level...
@@ -35,7 +35,7 @@ void RenderSystem::update(entt::registry& reg) {
       /**
        * Rendering Terminal...
        */
-      terminalSystem.update(reg);
+      terminalSystem.render();
 
     DrawFPS(0, 0);
   EndDrawing();
@@ -134,7 +134,7 @@ void RenderSystem::update(entt::registry& reg) {
   }
 
   void RenderService::DrawCamera(const Components::Controllable& player) {
-    GameContext::Player::camera2d.target = { player.pos.x - (float) GetScreenWidth() / 2, player.pos.y - (float) GetScreenHeight() / 2 };
+    GameContext::Player::GetCamera().target = { player.pos.x - (float) GetScreenWidth() / 2, player.pos.y - (float) GetScreenHeight() / 2 };
   }
 
   } // namespace Services

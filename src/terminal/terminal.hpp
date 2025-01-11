@@ -5,11 +5,8 @@
 #ifndef TERMINAL_HPP
 #define TERMINAL_HPP
 
-#include "raylib.h"
 #include <string>
 #include <vector>
-#include <functional>
-#include <iostream>
 #include <unordered_map>
 
 class Terminal {
