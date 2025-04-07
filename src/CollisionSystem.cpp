@@ -32,12 +32,10 @@ namespace Systems {
               if (level.ptr[row * level.columns + col] == 1) {
                   Rectangle wallRect = Rectangle { (float) col * 30, (float) row * 30, 30, 30 };
                   if (CheckCollisionRecs(playerRect, wallRect)) {
-                      collision = true;
-                      break;
+                      return true;
                   }
               }
           }
-          if (collision) break;
       }
       return collision;
   }

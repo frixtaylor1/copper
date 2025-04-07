@@ -40,12 +40,12 @@ private:
 };
 
 extern "C" {
-    Terminal* CreateTerminal();
-    void      DestroyTerminal(Terminal* terminal);
-    void      TerminalSetCallback(Terminal* terminal, const char* command, void (*callback)(void));
-    void      TerminalHandleInput(Terminal* terminal);
-    void      TerminalRender(Terminal* terminal);
-    bool      TerminalIsActive(Terminal* terminal);
-    void      TerminalTogle(Terminal* terminal);
+  Terminal* CreateTerminal();
+  void      DestroyTerminal(Terminal* terminal);
+  void      TerminalSetCallback(Terminal* terminal, const char* command, void (*callback)(void));
+  void      TerminalHandleInput(Terminal* terminal);
+  void      TerminalRender(Terminal* terminal);
+  bool      TerminalIsActive(Terminal* terminal);
+  void      TerminalTogle(Terminal* terminal);
 }
 #endif // TERMINAL_HPP

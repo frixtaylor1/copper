@@ -30,6 +30,7 @@ public:
 public:
   static Color                GetBackgroundColor();
   static LevelData            GetLevel(int level);
+  static size_t               GetLevelIdx();
   static void                 NextLevel();
   static void                 PreviousLevel();
   static LevelData            GetNextLevel();

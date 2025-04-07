@@ -6,7 +6,9 @@
 #include "AssetsContext.hpp"
 #include "Components.hpp"
 #include "GameContext.hpp"
+#include "LevelManager.hpp"
 
+#include <map>
 #include <raylib.h>
 #include <terminal.hpp>
 
@@ -53,89 +55,30 @@ void RenderSystem::update(entt::registry& reg) {
   }
 
   void RenderService::DrawLevel() {
-    LevelData level = GameContext::GetLevel();
-    size_t row      = 0;
-    size_t column   = 0;
+      LevelData level = GameContext::GetLevel();
+      size_t row = 0;
+      size_t column = 0;
 
+      RenderLevelCtx renderCtx = levelRenderCtx[GameContext::GetLevelIdx()];
 
-    for (size_t cell = 0; cell < level.rows * level.columns; cell++) {
-      Vector2 pos = { (float) column * 30, (float) row * 30 };
-      switch (level.ptr[cell]) {
-        case 1:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetMountainWallRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 2:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetDoorRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 10:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetGreenGrassGroundRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 11:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetYellowGrassGroundLeftRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 12:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetYellowGrassGroundRightRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 13:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetYellowGrassGroundRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 14:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetYellowGrassGroundUpRectangle(),
-            pos,
-            WHITE
-          );
-          break;
-        case 15:
-          DrawTextureRec(
-            AssetsContext::MapReources::mapTexture,
-            AssetsContext::MapReources::GetYellowGrassGroundDownRectangle(),
-            pos,
-            WHITE
-          );
-          break;
+      for (size_t cell = 0; cell < level.rows * level.columns; cell++) {
+          Vector2 pos = { (float)column * 30, (float)row * 30 };
+
+          Rectangle rectangle = renderCtx.ctx.at(level.ptr[cell]);
+          DrawTextureRec(AssetsContext::MapReources::mapTexture, rectangle, pos, WHITE);
+
+          if (++column == level.columns) {
+              column = 0;
+              row++;
+          }
       }
-      if (++column == level.columns) {
-        column = 0;
-        row++;
-      }
-    }
   }
 
   void RenderService::DrawCamera(const Components::Controllable& player) {
     GameContext::Player::GetCamera().target = { player.pos.x - (float) GetScreenWidth() / 2, player.pos.y - (float) GetScreenHeight() / 2 };
   }
+
+
 
   } // namespace Services
 

@@ -89,6 +89,10 @@ LevelData GameContext::GetLevel(int level) {
   return {};
 }
 
+size_t GameContext::GetLevelIdx() {
+  return LevelContext::currentLevel - 1;
+}
+
 LevelData GameContext::GetNextLevel() {
   if (LevelContext::currentLevel == 4) return {};
   return GetLevel(LevelContext::currentLevel++);
